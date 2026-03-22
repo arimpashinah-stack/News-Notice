@@ -4,7 +4,7 @@ $host = 'shina-news-arimpashinah-717b.i.aivencloud.com';
 $port = '20110';
 $dbname = 'defaultdb';
 $user = 'avnadmin';
-$password = 'AVNS_hj7G6NFLHYr7RQQiZOz';
+$password = getenv('AIVEN_PASSWORD') ?: 'AVNS_hj7G6NFLHYr7RQQiZOz';
 $ssl_ca = 'src/ca.pem';
 
 try {

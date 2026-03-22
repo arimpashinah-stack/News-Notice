@@ -1,8 +1,8 @@
-name: Update Site Every 5 Hours
+name: Update News Every 5 Hours
 on:
   schedule:
     - cron: '0 */5 * * *'
-  workflow_dispatch:      
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -18,9 +18,9 @@ jobs:
           extensions: pdo_mysql
 
       - name: Run Build Script
-        run: php build.php
         env:
           AIVEN_PASSWORD: ${{ secrets.AIVEN_PASSWORD }}
+        run: php build.php
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
