@@ -1,5 +1,7 @@
 name: Update News Every 5 Hours
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: '0 */5 * * *'
   workflow_dispatch:
