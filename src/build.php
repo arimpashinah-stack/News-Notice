@@ -31,9 +31,8 @@ try {
         $insert->execute([$story['title'], "Live tech update from Hacker News.", $url, $current_time, $today]);
     }
 
-    // 3. GET DATA
+    // 3. GET DATA (Removed the Users query)
     $news_items = $pdo->query("SELECT * FROM daily_news LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
-    $registered_users = $pdo->query("SELECT id, username, email FROM users ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 
     // 4. GENERATE THE HTML
     ob_start();
@@ -49,11 +48,17 @@ try {
         h1 { color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; margin-top: 0; }
         .timer-badge { background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; font-weight: bold; border: 1px solid #ffeeba; display: inline-block; margin: 20px 0; font-size: 1.1em; }
         .section { margin-top: 30px; }
-        .news-item { border-left: 4px solid #0066cc; padding-left: 20px; margin-bottom: 25px; }
-        .news-item a { color: #0066cc; text-decoration: none; font-weight: bold; font-size: 1.1em; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        
+        /* Updated News Item Styles */
+        .news-item { border-left: 4px solid #0066cc; padding: 10px 20px 15px 20px; margin-bottom: 25px; background: #fdfdfd; border-radius: 0 8px 8px 0; }
+        .news-item h3 { margin: 0 0 5px 0; color: #222; }
+        .read-more { display: inline-block; margin-top: 8px; color: white; background-color: #0066cc; padding: 6px 15px; text-decoration: none; border-radius: 5px; font-size: 0.9em; font-weight: bold; transition: background 0.3s; }
+        .read-more:hover { background-color: #0052a3; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px; }
         th, td { padding: 14px; border-bottom: 1px solid #eee; text-align: left; }
         th { background: #f8f9fa; color: #555; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; }
+        .group-header { background: #0066cc; color: white; padding: 10px 15px; border-radius: 6px 6px 0 0; margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -69,26 +74,17 @@ try {
             <h2>🔥 Live Tech Feed</h2>
             <?php foreach($news_items as $news): ?>
                 <div class="news-item">
-                    <a href="<?= $news['article_url'] ?>" target="_blank"><?= htmlspecialchars($news['title']) ?></a>
-                    <p style="color: #666; margin: 5px 0;"><?= htmlspecialchars($news['summary']) ?></p>
+                    <h3><?= htmlspecialchars($news['title']) ?></h3>
+                    <p style="color: #666; margin: 5px 0 10px 0;"><?= htmlspecialchars($news['summary']) ?></p>
+                    <a href="<?= $news['article_url'] ?>" target="_blank" class="read-more">Read full article ➔</a>
                 </div>
             <?php endforeach; ?>
         </div>
 
         <div class="section">
-            <h2>👥 Registered Users (Cloud)</h2>
+            [cite_start]<h2 class="group-header">🎓 Project Group: R [cite: 1]</h2>
             <table>
-                <tr><th>ID</th><th>Username</th><th>Email Address</th></tr>
-                <?php foreach($registered_users as $u): ?>
-                    <tr><td><?= $u['id'] ?></td><td><?= htmlspecialchars($u['username']) ?></td><td><?= htmlspecialchars($u['email']) ?></td></tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
-
-        <div class="section">
-            <h2>🎓 Project Group R - Members</h2>
-            <table>
-                <tr><th>Name</th><th>Registration Number</th><th>Student Number</th></tr>
+                <tr><th>NAME</th><th>REGISTRATION NUMBER</th><th>STUDENT NUMBER</th></tr>
                 <tr><td>ARIMPA SHINAH</td><td>23/U/06403/PS</td><td>2300706403</td></tr>
                 <tr><td>NABAGESERA MERCY</td><td>23/U/0941</td><td>2300700941</td></tr>
                 <tr><td>LWENSISI AGNES NASSIMBWA</td><td>23/U/10892/PS</td><td>2300710892</td></tr>
@@ -130,5 +126,6 @@ try {
 <?php
     $content = ob_get_clean();
     file_put_contents('index.html', $content);
-    echo "Successfully generated dashboard for Group R!";
+    echo "Successfully generated Group R dashboard with clickable links!";
 } catch (Exception $e) { echo "Build failed: " . $e->getMessage(); exit(1); }
+?>
