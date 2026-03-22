@@ -2,59 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Shinan News - MENSA Project</title>
+    <title>Shinan News - Group R Dashboard</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f0f2f5; color: #333; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; margin-top: 0; }
+        .timer-badge { background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; font-weight: bold; border: 1px solid #ffeeba; display: inline-block; margin: 20px 0; font-size: 1.1em; }
         .section { margin-top: 30px; }
-        .news-box { border-left: 4px solid #0066cc; padding-left: 15px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background: #f8f9fa; }
-        .footer { margin-top: 50px; font-size: 0.85em; color: #777; border-top: 1px solid #ddd; padding-top: 20px; }
+        .news-item { border-left: 4px solid #0066cc; padding-left: 20px; margin-bottom: 25px; }
+        .news-item a { color: #0066cc; text-decoration: none; font-weight: bold; font-size: 1.1em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px; }
+        th, td { padding: 14px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; color: #555; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; }
+        .group-header { background: #0066cc; color: white; padding: 10px 15px; border-radius: 6px 6px 0 0; margin-bottom: 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Shinan News Live Dashboard</h1>
-        <p><i>Last Cloud Update: 2026-03-22 03:19:55 (EAT)</i></p>
+        <p><i>System Status: Operational | Last Build: 2026-03-22 03:28:12 (EAT)</i></p>
+
+        <div class="timer-badge">
+            Next News Cycle in: <span id="countdown">Calculating...</span>
+        </div>
 
         <div class="section">
             <h2>🔥 Live Tech Feed</h2>
-                            <div class="news-box">
-                    <strong><a href="https://tinygrad.org/#tinybox" target="_blank">Tinybox – Offline AI device 120B parameters</a></strong>
-                    <p>Live tech update from Hacker News.</p>
+                            <div class="news-item">
+                    <a href="https://tinygrad.org/#tinybox" target="_blank">Tinybox – Offline AI device 120B parameters</a>
+                    <p style="color: #666; margin: 5px 0;">Live tech update from Hacker News.</p>
                 </div>
-                            <div class="news-box">
-                    <strong><a href="https://43081j.com/2026/03/three-pillars-of-javascript-bloat" target="_blank">The Three Pillars of JavaScript Bloat</a></strong>
-                    <p>Live tech update from Hacker News.</p>
+                            <div class="news-item">
+                    <a href="https://43081j.com/2026/03/three-pillars-of-javascript-bloat" target="_blank">The Three Pillars of JavaScript Bloat</a>
+                    <p style="color: #666; margin: 5px 0;">Live tech update from Hacker News.</p>
                 </div>
-                            <div class="news-box">
-                    <strong><a href="https://mtbest.net/chest-fridge/" target="_blank">Chest Fridge (2009)</a></strong>
-                    <p>Live tech update from Hacker News.</p>
+                            <div class="news-item">
+                    <a href="https://mtbest.net/chest-fridge/" target="_blank">Chest Fridge (2009)</a>
+                    <p style="color: #666; margin: 5px 0;">Live tech update from Hacker News.</p>
                 </div>
-                            <div class="news-box">
-                    <strong><a href="https://writings.hongminhee.org/2026/03/craft-alienation-llm/" target="_blank">Why craft-lovers are losing their craft</a></strong>
-                    <p>Live tech update from Hacker News.</p>
+                            <div class="news-item">
+                    <a href="https://tooscut.app/" target="_blank">Professional video editing, right in the browser with WebGPU and WASM</a>
+                    <p style="color: #666; margin: 5px 0;">Live tech update from Hacker News.</p>
                 </div>
-                            <div class="news-box">
-                    <strong><a href="https://tooscut.app/" target="_blank">Professional video editing, right in the browser with WebGPU and WASM</a></strong>
-                    <p>Live tech update from Hacker News.</p>
+                            <div class="news-item">
+                    <a href="https://lucumr.pocoo.org/2026/3/20/some-things-just-take-time/" target="_blank">Some things just take time</a>
+                    <p style="color: #666; margin: 5px 0;">Live tech update from Hacker News.</p>
                 </div>
                     </div>
 
         <div class="section">
             <h2>👥 Registered Users (Cloud)</h2>
             <table>
-                <tr><th>ID</th><th>Username</th><th>Email</th></tr>
+                <tr><th>ID</th><th>Username</th><th>Email Address</th></tr>
                             </table>
         </div>
 
-        <div class="footer">
-            <h3>Project Group: MENSA</h3>
-            <p><strong>Members:</strong> Arimpa Shinah, Nabagesera Mercy, Lwensisi Agnes Nassimbwa, Jamada Yasin Jamada, Nabbanja Barbra, Ebele Ben, Mukibi Samuel, Muyanja Isaac Robert, Maninga Kevin.</p>
+        <div class="section">
+            <h2 class="group-header">🎓 Project Group: R</h2>
+            <table>
+                <tr><th>NAME</th><th>REGISTRATION NUMBER</th><th>STUDENT NUMBER</th></tr>
+                <tr><td>ARIMPA SHINAH</td><td>23/U/06403/PS</td><td>2300706403</td></tr>
+                <tr><td>NABAGESERA MERCY</td><td>23/U/0941</td><td>2300700941</td></tr>
+                <tr><td>LWENSISI AGNES NASSIMBWA</td><td>23/U/10892/PS</td><td>2300710892</td></tr>
+                <tr><td>JAMADA YASIN JAMADA</td><td>23/U/08420/EVE</td><td>2300708420</td></tr>
+                <tr><td>NABBANJA BARBRA</td><td>23/U12783//EVE</td><td>2300712783</td></tr>
+                <tr><td>EBELE BEN</td><td>23/U/2048</td><td>230072048</td></tr>
+                <tr><td>MUKIBI SAMUEL</td><td>23/U/11833/PS</td><td>2300711833</td></tr>
+                <tr><td>MUYANJA ISAAC ROBERT</td><td>23/U/12421</td><td>2300712421</td></tr>
+                <tr><td>MANINGA KEVIN</td><td>23/U/11037/EVE</td><td>2300711037</td></tr>
+            </table>
         </div>
     </div>
+
+    <script>
+        function updateTimer() {
+            var now = new Date();
+            var utcHour = now.getUTCHours();
+            
+            // GitHub Action runs every 5 hours (0, 5, 10, 15, 20 UTC)
+            var nextIntervals = [0, 5, 10, 15, 20, 24];
+            var nextHour = nextIntervals.find(h => h > utcHour);
+            
+            var targetDate = new Date(now);
+            targetDate.setUTCHours(nextHour, 0, 0, 0);
+            
+            var diff = targetDate - now;
+            
+            var hours = Math.floor(diff / 3600000);
+            var minutes = Math.floor((diff % 3600000) / 60000);
+            var seconds = Math.floor((diff % 60000) / 1000);
+            
+            document.getElementById("countdown").innerHTML = hours + "h " + minutes + "m " + seconds + "s";
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
