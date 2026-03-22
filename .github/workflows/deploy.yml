@@ -1,0 +1,4 @@
+- name: Run Build Script
+        run: php build.php
+        env:
+          AIVEN_PASSWORD: ${{ secrets.AIVEN_PASSWORD }}
