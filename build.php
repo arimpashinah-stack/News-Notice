@@ -1,5 +1,5 @@
 <?php
-// AIVEN CONNECTION (Use your credentials)
+// --- AIVEN CLOUD CONNECTION ---
 $host = 'shina-news-arimpashinah-717b.i.aivencloud.com';
 $port = '20110';
 $dbname = 'defaultdb';
@@ -13,46 +13,101 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    // Fetch News and Users
+    // 1. AUTO-CREATE TABLES (Fixes the "Table doesn't exist" error)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS daily_news (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255),
+        summary TEXT,
+        article_url VARCHAR(255),
+        fetch_date DATE,
+        fetch_time INT
+    )");
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        email VARCHAR(100) UNIQUE,
+        password_hash VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    // 2. FETCH FRESH NEWS FROM API (Ensures the cloud has data)
+    $api_url = "https://hacker-news.firebaseio.com/v0/topstories.json";
+    $top_stories = json_decode(file_get_contents($api_url));
+    
+    $pdo->exec("TRUNCATE TABLE daily_news");
+    $insert = $pdo->prepare("INSERT INTO daily_news (title, summary, article_url, fetch_time, fetch_date) VALUES (?, ?, ?, ?, ?)");
+    $current_time = time();
+    $today = date('Y-m-d');
+
+    for ($i = 0; $i < 5; $i++) {
+        $story_id = $top_stories[$i];
+        $story_data = json_decode(file_get_contents("https://hacker-news.firebaseio.com/v0/item/{$story_id}.json"), true);
+        $url = $story_data['url'] ?? "https://news.ycombinator.com/item?id=".$story_id;
+        $insert->execute([$story_data['title'], "Live tech update from Hacker News.", $url, $current_time, $today]);
+    }
+
+    // 3. GET DATA FOR THE DASHBOARD
     $news_items = $pdo->query("SELECT * FROM daily_news LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
     $registered_users = $pdo->query("SELECT id, username, email FROM users ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 
-    // START CAPTURING OUTPUT
+    // 4. GENERATE THE STATIC HTML
     ob_start();
 ?>
 <!DOCTYPE html>
-<html>
-<head><title>Shinan News - Live</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shinan News - MENSA Project</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f0f2f5; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; }
+        .section { margin-top: 30px; }
+        .news-box { border-left: 4px solid #0066cc; padding-left: 15px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+        .footer { margin-top: 50px; font-size: 0.85em; color: #777; border-top: 1px solid #ddd; padding-top: 20px; }
+    </style>
+</head>
 <body>
-    <h1>Welcome to Shinan News</h1>
-    <h2>Top Tech News</h2>
-    <ul>
-        <?php foreach($news_items as $n): ?>
-            <li><a href="<?= $n['article_url'] ?>"><?= $n['title'] ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-    <h2>Registered Users</h2>
-    <ul>
-        <?php foreach($registered_users as $u): ?>
-            <li><?= $u['username'] ?> (<?= $u['email'] ?>)</li>
-        <?php endforeach; ?>
-    </ul>
-    <h2>Group Members</h2>
-    <ul>
-        <li>ARIMPA SHINAH (23/U/06403/PS) [cite: 1]</li>
-        <li>NABAGESERA MERCY (23/U/0941) [cite: 1]</li>
-        <li>LWENSISI AGNES NASSIMBWA (23/U/10892/PS) [cite: 1]</li>
-        <li>JAMADA YASIN JAMADA (23/U/08420/EVE) [cite: 1]</li>
-        <li>NABBANJA BARBRA (23/U12783//EVE) [cite: 1]</li>
-        <li>EBELE BEN (23/U/2048) [cite: 1]</li>
-        <li>MUKIBI SAMUEL (23/U/11833/PS) [cite: 1]</li>
-        <li>MUYANJA ISAAC ROBERT (23/U/12421) [cite: 1]</li>
-        <li>MANINGA KEVIN (23/U/11037/EVE) [cite: 1]</li>
-    </ul>
+    <div class="container">
+        <h1>Shinan News Live Dashboard</h1>
+        <p><i>Last Cloud Update: <?php echo date('Y-m-d H:i:s'); ?> (EAT)</i></p>
+
+        <div class="section">
+            <h2>🔥 Live Tech Feed</h2>
+            <?php foreach($news_items as $news): ?>
+                <div class="news-box">
+                    <strong><a href="<?= $news['article_url'] ?>" target="_blank"><?= htmlspecialchars($news['title']) ?></a></strong>
+                    <p><?= htmlspecialchars($news['summary']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="section">
+            <h2>👥 Registered Users (Cloud)</h2>
+            <table>
+                <tr><th>ID</th><th>Username</th><th>Email</th></tr>
+                <?php foreach($registered_users as $u): ?>
+                    <tr><td><?= $u['id'] ?></td><td><?= htmlspecialchars($u['username']) ?></td><td><?= htmlspecialchars($u['email']) ?></td></tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+
+        <div class="footer">
+            <h3>Project Group: MENSA</h3>
+            <p><strong>Members:</strong> Arimpa Shinah, Nabagesera Mercy, Lwensisi Agnes Nassimbwa, Jamada Yasin Jamada, Nabbanja Barbra, Ebele Ben, Mukibi Samuel, Muyanja Isaac Robert, Maninga Kevin.</p>
+        </div>
+    </div>
 </body>
 </html>
 <?php
-    $html = ob_get_clean();
-    file_put_contents('index.html', $html); // This creates the static file for GitHub Pages
-    echo "Static site generated successfully!";
-} catch (Exception $e) { echo $e->getMessage(); }
+    $content = ob_get_clean();
+    file_put_contents('index.html', $content);
+    echo "Successfully generated index.html with live news!";
+} catch (Exception $e) { 
+    echo "Build failed: " . $e->getMessage(); 
+    exit(1); 
+}
